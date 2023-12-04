@@ -13,6 +13,11 @@ const routes: RouteRecordRaw[] = [
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue'),
   },
+
+  {
+    path: '/add-poll',
+    component: () => import('src/components/PollAddForm.vue')
+  },
 ];
 
 export default routes;

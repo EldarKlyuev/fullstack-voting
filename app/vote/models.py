@@ -24,14 +24,12 @@ class User(models.Model):
         db_table = 'public"."users'
 
 
-class Voting(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField()
-    time_start = models.DateTimeField()
-    time_end = models.DateTimeField()
-
-    class Meta:
-        db_table = 'public"."voting'
+class Poll(models.Model):
+    question = models.CharField(max_length=200)
+    pub_date = models.DateTimeField('date published')
 
 
-# class VotingChoises
+class Choice(models.Model):
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
+    choice_text = models.CharField(max_length=200)
+    votes = models.IntegerField(default=0)
