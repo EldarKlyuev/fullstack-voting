@@ -1,35 +1,34 @@
-<!-- src/components/PollList.vue -->
-
 <template>
-    <div class="q-pa-md">
-      <h2 class="text-h6">Список голосований</h2>
-      <q-list>
-        <q-item v-for="poll in polls" :key="poll.id">
-          <q-item-label>{{ poll.question }}</q-item-label>
-        </q-item>
-      </q-list>
-  
-      <q-btn to="/add-poll" label="Добавить голосование" color="primary" />
-    </div>
-  </template>
-  
-  <script setup>
-  import { ref, onMounted } from 'vue';
-  import axios from 'axios';
-  
-  const polls = ref([]);
-  
-  const fetchPolls = async () => {
-    try {
-      const response = await axios.get('http://localhost:8000/api/polls/');
-      polls.value = response.data;
-    } catch (error) {
-      console.error('Ошибка при загрузке голосований', error);
+  <div>
+    <q-list>
+      <q-item v-for="vote in votes" :key="vote.id">
+        <q-item-section>
+          <q-item-label>{{ vote.questionText }}</q-item-label>
+        </q-item-section>
+        <q-item-section side>
+          <q-btn @click="voteDetails(vote.id)" label="Details" />
+        </q-item-section>
+      </q-item>
+    </q-list>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      votes: [] // Populate this array with votes from the server
+    };
+  },
+  methods: {
+    voteDetails(voteId) {
+      // Navigate to the details page or show a modal with details
+      // Example: this.$router.push(`/votes/${voteId}`)
     }
-  };
-  
-  onMounted(() => {
-    fetchPolls();
-  });
-  </script>
-  
+  },
+  created() {
+    // Fetch the list of votes from the server
+    // Example: this.$axios.get('/api/votes/').then(response => this.votes = response.data)
+  }
+};
+</script>

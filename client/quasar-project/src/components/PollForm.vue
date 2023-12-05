@@ -1,41 +1,67 @@
-<!-- src/components/PollAddForm.vue -->
-
 <template>
-    <div class="q-pa-md">
-      <h2 class="text-h6">Добавить голосование</h2>
-      <q-form @submit.prevent="addPoll">
-        <q-input v-model="question" label="Вопрос" outlined />
-        <q-input v-model="options" label="Варианты ответов (через запятую)" outlined />
-        <q-btn type="submit" label="Добавить" />
-      </q-form>
-    </div>
-  </template>
-  
-  <script setup>
-  import { ref } from 'vue';
-  import axios from 'axios';
-  
-  const question = ref('');
-  const options = ref('');
-  
-  const addPoll = async () => {
-    try {
-      const response = await axios.post('http://localhost:8000/api/polls/', {
-        question: question.value,
-        options: options.value.split(',').map(option => option.trim())
-      });
-  
-      // Обновление списка голосований
-      fetchPolls();
-  
-      // Сброс полей формы
-      question.value = '';
-      options.value = '';
-  
-      console.log('Голосование успешно добавлено:', response.data);
-    } catch (error) {
-      console.error('Ошибка при добавлении голосования', error);
+  <div class="q-form-container">
+    <q-form @submit="submitForm">
+      <q-input v-model="questionText" label="Question Text" class="q-input-label"/>
+      <q-input v-model="selectedChoices" label="Select Choices (comma-separated)" class="q-input-label"/>
+      <q-btn type="submit" label="Submit" class="q-btn-submit" />
+    </q-form>
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+
+export default {
+  data() {
+    return {
+      questionText: '',
+      selectedChoices: '', // Updated to handle multiple choices separated by a comma
+    };
+  },
+  methods: {
+    submitForm() {
+      // Convert comma-separated choices to an array
+      const choicesArray = this.selectedChoices.split(',').map(choice => choice.trim());
+
+      // Send form data to the server using API
+      const formData = {
+        questionText: this.questionText,
+        selectedChoices: choicesArray,
+      };
+
+      // Call your API endpoint to create a new vote
+      axios.post('http://127.0.0.1:8000/api/questions/', formData)
+        .then(response => {
+          // Handle successful response
+          console.log('Question created successfully:', response.data);
+        })
+        .catch(error => {
+          // Handle error
+          console.error('Error creating question:', error);
+        });
     }
-  };
-  </script>
-  
+  }
+};
+</script>
+
+<style lang="scss">
+.q-form-container {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.q-input-label {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.q-btn-submit {
+  margin-top: 16px;
+}
+
+.q-field__native:focus {
+  border-color: #00bcd4;
+  box-shadow: 0 0 0 2px #00bcd4;
+}
+</style>
