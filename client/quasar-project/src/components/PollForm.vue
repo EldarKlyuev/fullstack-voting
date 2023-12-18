@@ -21,7 +21,7 @@
             <q-item v-if="question.id === choice.question" clickable @click="handleChoiceClick(choice.id)"
               :class="{ 'selected-choice': isSelectedChoice(choice.id) }">
               <q-item-section>
-                <q-item-label class="choice-label">{{ choice.choice_text }}</q-item-label>
+                <q-item-label class="choice-label">{{ staticClickData[choice.id] || choice.choice_text }}</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
@@ -30,6 +30,9 @@
       <q-item>
         <q-item-section side>
           <q-btn icon="delete" color="negative" flat round dense @click="deleteClick(question.id)"/>
+        </q-item-section>
+        <q-item-section side v-if="userRole !== 'User'">
+          <q-btn icon="analytics" color="primary" flat round dense @click="staticClick(question.id)"/>
         </q-item-section>
       </q-item>
     </q-list>
@@ -47,7 +50,8 @@ export default {
       questions: {},
       choices: [],
       selectedChoiceId: null,
-      userRole: ''
+      userRole: '',
+      staticClickData: {},
     };
   },
   computed: {
@@ -91,6 +95,17 @@ export default {
         })
         .catch(error => {
           console.error('Error deleting question:', error);
+        });
+    },
+    staticClick(questionId) {
+      axios.get(`http://127.0.0.1:8000/api/static/${questionId}/`)
+        .then(response => {
+          console.log(response.data)
+          this.staticClickData = response.data;
+          console.log(this.staticClickData);
+        })
+        .catch(error => {
+          console.error('Error fetching static data:', error);
         });
     },
     handleChoiceClick(choiceId) {
@@ -188,6 +203,12 @@ $q-form-container-margin: 0 auto;
 
 .choice-label {
   font-size: 16px;
+}
+
+.selected-choice {
+  border: 2px solid #209e00;
+  border-radius: 8px;
+  background-color: #ffffff;
 }
 
 </style>

@@ -17,6 +17,7 @@
 
 <style lang="scss">
 .app-layout {
+  background-color: #BBC6C8;
   &__page-container {
     height: 0px;
   }

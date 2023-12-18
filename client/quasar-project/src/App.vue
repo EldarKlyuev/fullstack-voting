@@ -9,7 +9,11 @@
 </script>
 
 <style>
+body {
+  background-color: #BBC6C8;
+}
 #app {
+  background-color: #BBC6C8;
   text-align: center;
   margin-top: 2rem;
 }

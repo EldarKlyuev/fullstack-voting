@@ -39,7 +39,6 @@ class CheckRoleUserAPIView(APIView):
         try:
             token = Token.objects.get(key=request.data.get('token'))
             user = User.objects.get(pk=token.user_id)
-            print(user.role_sys)
 
         except Exception as ex:
             print(ex)
@@ -128,3 +127,21 @@ class VoteCreateAPIView(APIView):
 class VoteListCreateView(generics.ListCreateAPIView):
     queryset = Vote.objects.all()
     serializer_class = VoteSerializer
+
+
+class StaticQuestionAPIView(APIView):
+
+    def get(self, request, **kwargs):
+        pk = kwargs.get("pk", None)
+        if not pk:
+            return Response({"error": "Method GET not allowed"}, status=405)
+        que = Question.objects.get(pk=pk)
+        choice = Choice.objects.filter(question_id=que)
+
+        responce = {}
+        for ch in choice:
+            vote = Vote.objects.filter(choice_id=ch).count()
+            responce[ch.id] = vote
+            
+        print(responce)
+        return Response(responce, status=status.HTTP_200_OK)

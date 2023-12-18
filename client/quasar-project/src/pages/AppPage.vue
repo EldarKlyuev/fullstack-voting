@@ -8,5 +8,6 @@
 
 <style lang="scss">
 .app-page {
+  background-color: #BBC6C8;
 }
 </style>

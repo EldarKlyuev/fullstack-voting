@@ -11,5 +11,6 @@ urlpatterns = [
     path('card/', QuestionGetAPIView.as_view()),
     path('card/<int:pk>/', QuestionDeleteAPIView.as_view()),
     path('checkrole/', CheckRoleUserAPIView.as_view(), name='checked-role-user'),
-    path('logout/', DeleteTokenAPIView.as_view(), name='logout-user')
+    path('logout/', DeleteTokenAPIView.as_view(), name='logout-user'),
+    path('static/<int:pk>/', StaticQuestionAPIView.as_view(), name='static-que'),
 ]
