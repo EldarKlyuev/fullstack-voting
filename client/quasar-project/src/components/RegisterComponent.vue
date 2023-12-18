@@ -2,7 +2,7 @@
   <div class="registration-form q-pa-md">
     <q-card>
       <q-card-section>
-        <q-h2 class="text-h6">Вход</q-h2>
+        <q-h2 class="text-h6">Регистрация</q-h2>
         <q-form @submit.prevent="registerUser">
           <q-input
             v-model="username"
@@ -24,21 +24,13 @@
           <q-btn
             type="submit"
             color="primary"
-            label="Войти"
+            label="Зарегистрироваться"
             dense
             class="q-mt-md"
           />
         </q-form>
       </q-card-section>
     </q-card>
-
-    <q-btn
-      to="/register"
-      color="primary"
-      label="Нет аккаунта? Регистрация"
-      class="q-mt-md"
-      dense
-    />
   </div>
 </template>
 
@@ -59,7 +51,7 @@ export default {
         password: this.password,
       };
 
-      axios.post('http://localhost:8000/api/login/', userData)
+      axios.post('http://localhost:8000/api/register/', userData)
         .then(response => {
           const token = response.data.token;
           localStorage.setItem('token', token);

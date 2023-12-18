@@ -4,20 +4,20 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/IndexPage.vue') }],
+    children: [{ path: '', component: () => import('pages/AppPage.vue') }],
   },
-
-  // Always leave this as last one,
-  // but you can also remove it
-  {
-    path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue'),
-  },
-
   {
     path: '/add-poll',
-    component: () => import('src/components/PollAddForm.vue')
+    component: () => import('src/components/PollForm.vue')
   },
+  {
+    path: '/login',
+    component: () => import('src/components/LoginComponent.vue')
+  },
+  {
+    path: '/register',
+    component: () => import('src/components/RegisterComponent.vue')
+  }
 ];
 
 export default routes;

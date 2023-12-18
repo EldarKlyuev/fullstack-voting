@@ -3,7 +3,7 @@
     <q-form @submit="submitForm">
       <q-input v-model="questionText" label="Вопрос" class="q-input-label"/>
       <q-input v-model="selectedChoices" label="Ответы (через запятую)" class="q-input-label"/>
-      <q-btn type="submit" label="Submit" class="q-btn-submit" />
+      <q-btn type="submit" label="Сохранить" class="q-btn-submit" />
     </q-form>
 
     <q-list v-for="question in questions.question" :key="question.id" class="question-list">

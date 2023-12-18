@@ -1,20 +1,11 @@
 <template>
   <div id="app">
-    <poll-form />
-    <poll-list />
+    <router-view />
   </div>
 </template>
 
 <script>
-import PollForm from './components/PollForm.vue';
-import PollList from './components/PollList.vue';
 
-export default {
-  components: {
-    PollForm,
-    PollList
-  }
-};
 </script>
 
 <style>
