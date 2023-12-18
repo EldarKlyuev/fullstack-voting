@@ -55,7 +55,7 @@ export default {
         .then(response => {
           const token = response.data.token;
           localStorage.setItem('token', token);
-          // Перенаправление пользователя или выполнение других действий
+          this.$router.push('/add-poll')
         })
         .catch(error => {
           console.error('Registration error:', error);

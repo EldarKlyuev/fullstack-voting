@@ -9,5 +9,7 @@ urlpatterns = [
     path('votes/', VoteListCreateView.as_view(), name='vote-list-create'),
     path('vote/', VoteCreateAPIView.as_view()),
     path('card/', QuestionGetAPIView.as_view()),
-    path('card/<int:pk>/', QuestionDeleteAPIView.as_view())
+    path('card/<int:pk>/', QuestionDeleteAPIView.as_view()),
+    path('checkrole/', CheckRoleUserAPIView.as_view(), name='checked-role-user'),
+    path('logout/', DeleteTokenAPIView.as_view(), name='logout-user')
 ]

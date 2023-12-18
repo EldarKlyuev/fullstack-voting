@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
 from .models import *
 from .serializer import *
 
@@ -25,17 +24,39 @@ class LoginView(APIView):
     '''Вью логина пользователя'''
 
     def post(self, request, *args, **kwargs):
-        username = request.data.get('username')
-        password = request.data.get('password')
-        user = authenticate(request, username=username, password=password)
+        try:
+            user_instance = User.objects.get(username=request.data['username'])
+            token = Token.objects.get(user=user_instance)
+        except Exception as ex:
+            print(ex)
+        return Response({'token': token.key}, status=status.HTTP_200_OK)
         
-        if user:
-            login(request, user)
-            token, created = Token.objects.get_or_create(user=user)
-            return Response({'token': token.key}, status=status.HTTP_200_OK)
-        else:
-            return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
+class CheckRoleUserAPIView(APIView):
+    '''Проверка роли пользователя'''
+
+    def post(self, request):
+        try:
+            token = Token.objects.get(key=request.data.get('token'))
+            user = User.objects.get(pk=token.user_id)
+            print(user.role_sys)
+
+        except Exception as ex:
+            print(ex)
+
+        return Response({"role": str(user.role_sys)}, status=status.HTTP_200_OK)
+
+class DeleteTokenAPIView(APIView):
+    '''Выход пользователя из системы'''
+
+    def delete(self, request):
+        try:
+            token = Token.objects.get(key=request.data.get('token'))
+            token.delete()
+        except Exception as ex:
+            print(ex)
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class QuestionListCreateView(generics.ListCreateAPIView):
     '''Вью создания вопроса'''

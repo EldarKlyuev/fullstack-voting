@@ -1,10 +1,15 @@
 <template>
   <div class="q-form-container">
-    <q-form @submit="submitForm">
-      <q-input v-model="questionText" label="Вопрос" class="q-input-label"/>
-      <q-input v-model="selectedChoices" label="Ответы (через запятую)" class="q-input-label"/>
-      <q-btn type="submit" label="Сохранить" class="q-btn-submit" />
-    </q-form>
+    <q-btn @click="logoutUser" label="Выход" color="negative" icon="logout"/>
+    <q-card class="q-my-md">
+      <q-card-section>
+        <q-form @submit="submitForm" v-if="userRole !== 'User'">
+          <q-input v-model="questionText" label="Вопрос" class="q-input-label"/>
+          <q-input v-model="selectedChoices" label="Ответы (через запятую)" class="q-input-label"/>
+          <q-btn type="submit" label="Сохранить" class="q-btn-submit" color="primary"/>
+        </q-form>
+      </q-card-section>
+    </q-card>
 
     <q-list v-for="question in questions.question" :key="question.id" class="question-list">
       <q-item>
@@ -41,7 +46,8 @@ export default {
       selectedChoices: '',
       questions: {},
       choices: [],
-      selectedChoiceId: null
+      selectedChoiceId: null,
+      userRole: ''
     };
   },
   computed: {
@@ -104,17 +110,40 @@ export default {
     isSelectedChoice(choiceId) {
       return this.selectedChoiceId === choiceId;
     },
+    checkRole() {
+      const token = localStorage.getItem('token')
+
+      axios.post('http://127.0.0.1:8000/api/checkrole/', {
+        'token': token
+      }).then(response => {
+        this.userRole = response.data['role']
+        console.log(this.userRole)
+      })
+    },
+    logoutUser() {
+      const token = localStorage.getItem('token')
+
+      axios.delete('http://127.0.0.1:8000/api/logout/', {
+        'token': token
+      }).then(() => {
+        this.$router.push('/login')
+      })
+    }
   },
   mounted() {
     this.fetchQuestions();
+    this.checkRole();
   },
 };
 </script>
 
 <style lang="scss">
+$q-form-container-max-width: 600px;
+$q-form-container-margin: 0 auto;
+
 .q-form-container {
-  max-width: 600px;
-  margin: 0 auto;
+  max-width: $q-form-container-max-width;
+  margin: $q-form-container-margin;
 }
 
 .q-input-label {
@@ -160,4 +189,5 @@ export default {
 .choice-label {
   font-size: 16px;
 }
+
 </style>
